@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/go-interpreter/wagon/disasm"
 	"github.com/go-interpreter/wagon/wasm"
 )
 
@@ -32,6 +33,19 @@ func main() {
 	m, err := wasm.DecodeModule(r)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// Regenerate the byte code for the function bodies
+	for i, body := range m.Code.Bodies {
+		d, err := disasm.Disassemble(body.Code)
+		if err != nil {
+			log.Fatalf("disassemble failed: %v", err)
+		}
+		code, err := disasm.Assemble(d)
+		if err != nil {
+			log.Fatalf("assemble failed: %v", err)
+		}
+		m.Code.Bodies[i].Code = code
 	}
 
 	// Re-encode the module file
