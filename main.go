@@ -43,7 +43,7 @@ func main() {
 
 	// Save out the new file
 	outFile := fileName + "-re-encoded"
-	err = ioutil.WriteFile(outFile, buf.Bytes(), 0644)
+	err = ioutil.WriteFile(outFile, buf.Bytes(), 0664)
 	if err != nil {
 		log.Fatal(err)
 	}
